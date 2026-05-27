@@ -1,0 +1,10 @@
+tests
+examples
+docs
+.github
+.gitignore
+.eslintcache
+*.log
+.DS_Store
+.vscode
+.idea
