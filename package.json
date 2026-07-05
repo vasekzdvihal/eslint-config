@@ -1,6 +1,6 @@
 {
   "name": "@vasekzdvihal/eslint-config",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Shared ESLint flat config for Vasek's Vue/Nuxt/TS projects. Wraps @antfu/eslint-config with personal style and AI guardrails.",
   "type": "module",
   "license": "MIT",
