@@ -1,3 +1,3 @@
-import vasek from '../../../src/vue.js'
+import vasek from '../../../src/vue.js';
 
-export default vasek()
+export default vasek();

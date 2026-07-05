@@ -20,7 +20,7 @@ One ESLint config to use across all my Vue/Nuxt projects (and a few non-Vue ones
 - **ESLint 9 flat config only.** No legacy `.eslintrc`.
 - **Semicolons on, single quotes, 2-space indent.** Override Antfu defaults via `stylistic:` option.
 - **Local-first development.** `npm link` into real projects, publish to npm only when ready.
-- **Node target**: `>=20.0.0`.
+- **Node target**: `>=22.0.0`. (Originally `>=20`, amended 2026-07-05 — see Amendments.)
 - **No Tailwind plugin** (don't use it at work). Can add `/tailwind` variant later if needed.
 - **No Prettier dependency.** Antfu's Stylistic handles formatting.
 - **Minimal CI**: install + lint + test on Node 20, PR + main push.
@@ -112,6 +112,16 @@ Deliberately separated so base can be adopted in legacy projects without explodi
 - No Prettier dependency.
 - No auto-publish.
 - No CLAUDE.md for the package itself until we know what's worth pinning.
+
+## Amendments (2026-07-05, post-review)
+
+Decisions changed after the five-perspective codebase review:
+
+- **Node target raised to `>=22.0.0`.** Antfu v9's dependency chain uses `Object.groupBy` (Node 21+), so the original `>=20` promise crashed at runtime — CI was red on Node 20. Engines, both workflows, and the README now say 22.
+- **Accessibility on by default in `/vue`.** `vue: { a11y: true }` wires in `eslint-plugin-vuejs-accessibility` (shipped as a dependency). Antfu renames the rule prefix to `vue-a11y/*`. Opt out per project with `vasek({ vue: { a11y: false } })`. Rationale: missing alt text and click-handlers-on-divs are exactly the mistakes AI-generated Vue templates make; fits the "hard rules Claude can't bypass" goal.
+- **Style/guardrail layers scoped to source files.** The `vasek/style`, `vasek/ai-guardrails`, and `vasek/strict` layers carry `files: ['**/*.?([cm])[jt]s?(x)', '**/*.vue']` so rules like `max-lines` can't fire on JSON/YAML/Markdown files linted by Antfu's presets (e.g. large locale JSONs).
+- **`stylistic: false` is honored.** The base factory previously spread the consumer's `stylistic` value into the defaults object, silently discarding `false`; it now passes `false` through to Antfu.
+- **Config block names standardized** to `vasek/style`, `vasek/ai-guardrails`, `vasek/typescript`, `vasek/vue`, `vasek/vue-files`, `vasek/strict` (consumer-facing via `.override()`; renamed pre-1.0).
 
 ## References
 
