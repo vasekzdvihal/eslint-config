@@ -1,14 +1,14 @@
 {
   "name": "consumer-project",
+  "type": "module",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "devDependencies": {
-    "@vasekzdvihal/eslint-config": "*",
+    "@vasekzdvihal/eslint-config": "file:../..",
     "eslint": "^9.10.0"
   }
 }

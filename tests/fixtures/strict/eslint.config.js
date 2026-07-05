@@ -1,3 +1,3 @@
-import vasek from '../../../src/strict.js'
+import vasek from '../../../src/strict.js';
 
-export default vasek()
+export default vasek();

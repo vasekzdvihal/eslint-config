@@ -1,6 +1,6 @@
 # Project: @vasekzdvihal/eslint-config
 
-Shared ESLint flat config that wraps `@antfu/eslint-config` with personal style + AI guardrails. Published to npm, used in Vasek's Vue/Nuxt/TS projects. Three entry points: default (TS base), `/vue`, `/strict`.
+Shared ESLint flat config that wraps `@antfu/eslint-config` with personal style + AI guardrails. Published to npm, used in Vasek's Vue/Nuxt/TS projects. Three entry points: default (TS base), `/vue`, `/strict`. Requires Node >=22 — Antfu v9's deps use `Object.groupBy` (Node 21+), so Node 20 crashes at runtime.
 
 ## Commands
 
@@ -12,7 +12,9 @@ Shared ESLint flat config that wraps `@antfu/eslint-config` with personal style 
 
 - `src/index.js` is the single source of truth for the base layer. `src/vue.js` and `src/strict.js` MUST compose by calling `vasek(...)` from `index.js` — never duplicate base rules.
 - Each variant exports a factory function returning Antfu's `FlatConfigComposer`. Signature: `(options, ...userConfigs)`. Don't change the return shape — consumers chain `.override()` on it.
-- Antfu renames `@typescript-eslint/*` to `ts/*`. Use `ts/no-explicit-any`, not the long form.
+- Antfu renames `@typescript-eslint/*` to `ts/*` and `vuejs-accessibility/*` to `vue-a11y/*`. Use the short forms.
+- `/vue` enables `vue: { a11y: true }` by default — `eslint-plugin-vuejs-accessibility` is a runtime dependency, don't remove it.
+- The style/guardrail/strict layers are scoped to `srcFiles` (exported from `src/index.js`) so they never hit Antfu's JSON/YAML/Markdown virtual files.
 - Antfu's stylistic plugin provides `style/semi`, `style/quotes`, `style/indent`. Don't add the core ESLint equivalents — they're not registered in flat config and will error.
 
 ## Code style
