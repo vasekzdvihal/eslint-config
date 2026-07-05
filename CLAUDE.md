@@ -6,7 +6,7 @@ Shared ESLint flat config that wraps `@antfu/eslint-config` with personal style 
 
 - `npm test` — runs the fixture-based smoke tests. Uses `node --test` with a glob (Node 24+ rejects bare `tests/` dir).
 - `npm run lint:fix` — dogfoods the config on its own source.
-- Do NOT run `npm publish` locally for routine releases. Publish is release-driven via `.github/workflows/publish.yml` using npm OIDC. Manual local publish only worked once for the initial package claim.
+- Do NOT run `npm publish` locally for routine releases. Publish is tag-driven via `.github/workflows/publish.yml`: pushing a `v*` tag runs lint+test then `npm publish` authed with the `NPM_TOKEN` repo secret. Manual local publish only worked once for the initial package claim.
 
 ## Architecture
 
@@ -37,8 +37,8 @@ Shared ESLint flat config that wraps `@antfu/eslint-config` with personal style 
 ## Workflow
 
 - Branch only for non-trivial changes. Tiny fixes can go straight to `main`.
-- Release: `npm version patch|minor|major` → `git push --follow-tags` → draft a GitHub Release against the new tag → `publish.yml` fires.
-- npm trusted publisher is configured on the package page (`@vasekzdvihal/eslint-config` → Settings → Publishing access). Repo `vasekzdvihal/eslint-config`, workflow `publish.yml`.
+- Release: `npm version patch|minor|major` → `git push --follow-tags`. Pushing the `v*` tag fires `publish.yml`, which verifies the tag matches `package.json` version, then lints, tests, and publishes. No GitHub Release needed.
+- Auth is the `NPM_TOKEN` repo secret (npm automation token), consumed as `NODE_AUTH_TOKEN` in the workflow. If publishes 401, the token is expired/revoked — regenerate on npmjs.com and update the secret.
 
 ## Imports
 

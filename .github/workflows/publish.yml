@@ -1,15 +1,14 @@
 name: publish
 
 on:
-  release:
-    types: [published]
+  push:
+    tags: ['v*']
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
@@ -19,11 +18,11 @@ jobs:
           node-version: 22
           cache: npm
           registry-url: https://registry.npmjs.org
-      - name: Check release tag matches package version
-        run: '[ "v$(node -p "require(\"./package.json\").version")" = "$RELEASE_TAG" ]'
-        env:
-          RELEASE_TAG: ${{ github.event.release.tag_name }}
+      - name: Check tag matches package version
+        run: '[ "v$(node -p "require(\"./package.json\").version")" = "$GITHUB_REF_NAME" ]'
       - run: npm ci --ignore-scripts
       - run: npm run lint
       - run: npm test
-      - run: npm publish --provenance
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

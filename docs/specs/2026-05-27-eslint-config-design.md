@@ -122,6 +122,7 @@ Decisions changed after the five-perspective codebase review:
 - **Style/guardrail layers scoped to source files.** The `vasek/style`, `vasek/ai-guardrails`, and `vasek/strict` layers carry `files: ['**/*.?([cm])[jt]s?(x)', '**/*.vue']` so rules like `max-lines` can't fire on JSON/YAML/Markdown files linted by Antfu's presets (e.g. large locale JSONs).
 - **`stylistic: false` is honored.** The base factory previously spread the consumer's `stylistic` value into the defaults object, silently discarding `false`; it now passes `false` through to Antfu.
 - **Config block names standardized** to `vasek/style`, `vasek/ai-guardrails`, `vasek/typescript`, `vasek/vue`, `vasek/vue-files`, `vasek/strict` (consumer-facing via `.override()`; renamed pre-1.0).
+- **Publish switched to token-driven on tag push.** Replaced the OIDC/trusted-publisher workflow (triggered on GitHub Release published, with `--provenance`) with a simpler `publish.yml` that fires on pushing a `v*` tag and authenticates via the `NPM_TOKEN` repo secret (`NODE_AUTH_TOKEN`). The workflow verifies the tag matches `package.json` version, then lints, tests, and runs `npm publish`. Provenance and `id-token: write` were dropped — provenance requires OIDC, which is what we removed. Release flow is now just `npm version …` → `git push --follow-tags`; no GitHub Release step. Supersedes the earlier "No auto-publish" out-of-scope note and the trusted-publisher setup.
 
 ## References
 
