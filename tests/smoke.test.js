@@ -109,6 +109,10 @@ it('vue: bad-long.vue triggers size limits for .vue files', async () => {
   });
 });
 
+it('react: good.tsx passes clean', async () => {
+  assertClean(await lintFile('react', 'good.tsx'));
+});
+
 it('strict: good.ts passes clean', async () => {
   assertClean(await lintFile('strict', 'good.ts'));
 });
