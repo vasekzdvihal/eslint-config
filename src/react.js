@@ -26,6 +26,19 @@ const reactRules = {
   'react/web-api-no-leaked-resize-observer': 'error',
 };
 
+/** Looser than /strict — React components are plain functions and naturally run longer. */
+const reactFileLimits = {
+  'max-lines-per-function': ['error', {
+    max: 100,
+    skipBlankLines: true,
+    skipComments: true,
+  }],
+  'max-lines': ['error', {
+    max: 400,
+    skipBlankLines: true,
+  }],
+};
+
 /**
  * React variant: composes the base config with Antfu's `react: true`
  * (`@eslint-react/eslint-plugin` renamed to `react/*`, plus `eslint-plugin-react-refresh`)
@@ -59,6 +72,11 @@ export default function vasekReact(options = {}, ...userConfigs) {
           rules: jsxA11yRules,
         }]
       : []),
+    {
+      name: 'vasek/react-files',
+      files: reactFiles,
+      rules: reactFileLimits,
+    },
     ...userConfigs,
   );
 }

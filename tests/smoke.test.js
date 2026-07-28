@@ -138,6 +138,14 @@ it('react: a11y is on by default and can be disabled', async () => {
   );
 });
 
+it('react: bad-long.tsx triggers size limits for component files', async () => {
+  const result = await lintFile('react', 'bad-long.tsx');
+  assertFires(result, {
+    'max-lines-per-function': ERROR,
+    'max-lines': ERROR,
+  });
+});
+
 it('strict: good.ts passes clean', async () => {
   assertClean(await lintFile('strict', 'good.ts'));
 });
