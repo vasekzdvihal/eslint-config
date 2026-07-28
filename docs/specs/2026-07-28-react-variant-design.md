@@ -67,3 +67,8 @@ Variants don't stack: `/react` can't be combined with `/strict`, same as `/vue` 
 ## Risk to verify during implementation
 
 Whether the fixture needs `react` itself installed for @eslint-react's version detection. If the smoke test fails without it, add a minimal `react` devDependency to the repo (fixtures resolve from the repo root), matching how real consumers look anyway.
+
+## Amendments (2026-07-28, during implementation)
+
+- **jsx-a11y dependency substituted.** `eslint-plugin-jsx-a11y` (latest 6.10.2, unreleased since 2024-10) peer-supports only ESLint ≤9 and ERESOLVE-fails against this repo's ESLint 10 — for consumers too. Shipped the maintained `eslint-plugin-jsx-a11y-x` fork (es-tooling, ESLint `^9 || ^10` peers, same 36-rule set) instead, registered in `src/react.js` under the familiar `jsx-a11y/*` rule IDs so the consumer-facing contract from this spec is unchanged.
+- **Version-detection risk didn't materialize.** Fixtures lint fine without `react` installed; no dev dependency was added.
