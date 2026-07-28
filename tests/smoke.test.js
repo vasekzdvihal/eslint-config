@@ -4,6 +4,7 @@ import { it } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { ESLint } from 'eslint';
 import vasek from '../src/index.js';
+import vasekReact from '../src/react.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const fixtureDir = name => resolve(here, 'fixtures', name);
@@ -103,6 +104,42 @@ it('vue: bad-setup.vue triggers SFC and accessibility rules', async () => {
 
 it('vue: bad-long.vue triggers size limits for .vue files', async () => {
   const result = await lintFile('vue', 'bad-long.vue');
+  assertFires(result, {
+    'max-lines-per-function': ERROR,
+    'max-lines': ERROR,
+  });
+});
+
+it('react: good.tsx passes clean', async () => {
+  assertClean(await lintFile('react', 'good.tsx'));
+});
+
+it('react: bad.tsx triggers promoted React guardrails as errors', async () => {
+  const result = await lintFile('react', 'bad.tsx');
+  assertFires(result, {
+    'react/exhaustive-deps': ERROR,
+    'react/no-array-index-key': ERROR,
+    'react/web-api-no-leaked-timeout': ERROR,
+    'react/dom-no-dangerously-set-innerhtml': ERROR,
+    'jsx-a11y/alt-text': ERROR,
+  });
+});
+
+it('react: a11y is on by default and can be disabled', async () => {
+  const withA11y = await vasekReact();
+  assert.ok(
+    withA11y.some(cfg => cfg.name === 'vasek/react-a11y'),
+    'expected vasek/react-a11y block by default',
+  );
+  const withoutA11y = await vasekReact({ react: { a11y: false } });
+  assert.ok(
+    !withoutA11y.some(cfg => cfg.name === 'vasek/react-a11y'),
+    'expected no vasek/react-a11y block with react: { a11y: false }',
+  );
+});
+
+it('react: bad-long.tsx triggers size limits for component files', async () => {
+  const result = await lintFile('react', 'bad-long.tsx');
   assertFires(result, {
     'max-lines-per-function': ERROR,
     'max-lines': ERROR,

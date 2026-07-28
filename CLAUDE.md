@@ -1,6 +1,6 @@
 # Project: @vasekzdvihal/eslint-config
 
-Shared ESLint flat config that wraps `@antfu/eslint-config` with personal style + AI guardrails. Published to npm, used in Vasek's Vue/Nuxt/TS projects. Three entry points: default (TS base), `/vue`, `/strict`. Requires Node >=22 — Antfu v9's deps use `Object.groupBy` (Node 21+), so Node 20 crashes at runtime.
+Shared ESLint flat config that wraps `@antfu/eslint-config` with personal style + AI guardrails. Published to npm, used in Vasek's Vue/Nuxt/TS projects. Four entry points: default (TS base), `/vue`, `/react`, `/strict`. Requires Node >=22 — Antfu v9's deps use `Object.groupBy` (Node 21+), so Node 20 crashes at runtime.
 
 ## Commands
 
@@ -10,10 +10,11 @@ Shared ESLint flat config that wraps `@antfu/eslint-config` with personal style 
 
 ## Architecture
 
-- `src/index.js` is the single source of truth for the base layer. `src/vue.js` and `src/strict.js` MUST compose by calling `vasek(...)` from `index.js` — never duplicate base rules.
+- `src/index.js` is the single source of truth for the base layer. `src/vue.js`, `src/react.js`, and `src/strict.js` MUST compose by calling `vasek(...)` from `index.js` — never duplicate base rules.
 - Each variant exports a factory function returning Antfu's `FlatConfigComposer`. Signature: `(options, ...userConfigs)`. Don't change the return shape — consumers chain `.override()` on it.
-- Antfu renames `@typescript-eslint/*` to `ts/*` and `vuejs-accessibility/*` to `vue-a11y/*`. Use the short forms.
+- Antfu renames `@typescript-eslint/*` to `ts/*`, `@eslint-react/*` to `react/*`, and `vuejs-accessibility/*` to `vue-a11y/*`. Use the short forms.
 - `/vue` enables `vue: { a11y: true }` by default — `eslint-plugin-vuejs-accessibility` is a runtime dependency, don't remove it.
+- `/react` enables jsx-a11y by default via the maintained `eslint-plugin-jsx-a11y-x` fork (the original peer-supports only ESLint ≤9 and ERESOLVE-fails on ESLint 10) — it's a runtime dependency, don't remove it or swap back without checking peers. `src/react.js` registers it under the familiar `jsx-a11y/*` rule IDs. Opt-out is `react: { a11y: false }` — the `a11y` key is ours, stripped before forwarding to Antfu.
 - The style/guardrail/strict layers are scoped to `srcFiles` (exported from `src/index.js`) so they never hit Antfu's JSON/YAML/Markdown virtual files.
 - Antfu's stylistic plugin provides `style/semi`, `style/quotes`, `style/indent`. Don't add the core ESLint equivalents — they're not registered in flat config and will error.
 

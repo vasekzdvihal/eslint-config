@@ -37,6 +37,20 @@ export default vasek();
 
 Accessibility rules (`eslint-plugin-vuejs-accessibility` — alt text, keyboard handlers on clickable elements, form labels…) are **on by default**. They surface as `vue-a11y/*` rule IDs. Opt out with `vasek({ vue: { a11y: false } })`.
 
+### React
+
+```js
+import vasek from '@vasekzdvihal/eslint-config/react';
+
+export default vasek();
+```
+
+Wraps Antfu's React preset (`@eslint-react` — rule IDs surface as `react/*` — plus `eslint-plugin-react-refresh`) and promotes the AI-critical rules to errors: `exhaustive-deps`, `no-array-index-key`, `dangerouslySetInnerHTML`, and the effect-leak rules (timers, listeners, observers, fetches without cleanup). Framework-neutral: Next.js / React Router / Vite specifics are auto-detected.
+
+Accessibility rules (alt text, keyboard handlers on clickable elements, form labels…) are **on by default** as `jsx-a11y/*` (powered by the maintained `eslint-plugin-jsx-a11y-x` fork — the original supports only ESLint ≤9). Opt out with `vasek({ react: { a11y: false } })`.
+
+Recommended opt-in: `vasek({ react: { tsconfigPath: 'tsconfig.json' } })` enables the type-aware `react/no-leaked-conditional-rendering` (the `{count && <div/>}` renders-`0` bug).
+
 ### Strict (opt-in)
 
 Adds harder size/complexity limits on top of the base. Use for new projects.
@@ -87,23 +101,25 @@ Note: Antfu renames plugin prefixes. Override the short names — `ts/no-explici
 
 ## What's in each variant
 
-| Rule group                                                      | base | /vue | /strict |
-|------------------------------------------------------------------|:----:|:----:|:-------:|
-| Antfu base (TS, stylistic)                                       |  ✓   |  ✓   |    ✓    |
-| Vue / Nuxt support                                               |      |  ✓   |         |
-| `curly`, `eqeqeq`                                                |  ✓   |  ✓   |    ✓    |
-| `complexity: 10`, `max-depth: 4`                                 |  ✓   |  ✓   |    ✓    |
-| `max-params: 4`, `id-length: 2`                                  |  ✓   |  ✓   |    ✓    |
-| `no-magic-numbers` (ignores 0,1,-1,2)                            |  ✓   |  ✓   |    ✓    |
-| `no-console: warn`, `no-debugger`                                |  ✓   |  ✓   |    ✓    |
-| `ts/no-explicit-any: warn`, `ts/no-unused-vars` (`_` ignored)    |  ✓   |  ✓   |    ✓    |
-| `script-setup` enforced (Vue only)                               |      |  ✓   |         |
-| Vue: `block-order`, `define-macros-order`, `no-unused-refs`, `require-explicit-emits`, `multi-word-component-names: off` | | ✓ | |
-| Accessibility (`vue-a11y/*`, on by default)                      |      |  ✓   |         |
-| Vue files: 100 lines/fn, 400 lines                               |      |  ✓   |         |
-| `max-lines-per-function: 50`                                     |      |      |    ✓    |
-| `max-lines: 250`, `max-statements: 20`                           |      |      |    ✓    |
-| `max-classes-per-file: 1`                                        |      |      |    ✓    |
+| Rule group                                                      | base | /vue | /react | /strict |
+|------------------------------------------------------------------|:----:|:----:|:------:|:-------:|
+| Antfu base (TS, stylistic)                                       |  ✓   |  ✓   |   ✓    |    ✓    |
+| Vue / Nuxt support                                               |      |  ✓   |        |         |
+| React support (`react/*`, react-refresh)                         |      |      |   ✓    |         |
+| `curly`, `eqeqeq`                                                |  ✓   |  ✓   |   ✓    |    ✓    |
+| `complexity: 10`, `max-depth: 4`                                 |  ✓   |  ✓   |   ✓    |    ✓    |
+| `max-params: 4`, `id-length: 2`                                  |  ✓   |  ✓   |   ✓    |    ✓    |
+| `no-magic-numbers` (ignores 0,1,-1,2)                            |  ✓   |  ✓   |   ✓    |    ✓    |
+| `no-console: warn`, `no-debugger`                                |  ✓   |  ✓   |   ✓    |    ✓    |
+| `ts/no-explicit-any: warn`, `ts/no-unused-vars` (`_` ignored)    |  ✓   |  ✓   |   ✓    |    ✓    |
+| `script-setup` enforced (Vue only)                               |      |  ✓   |        |         |
+| Vue: `block-order`, `define-macros-order`, `no-unused-refs`, `require-explicit-emits`, `multi-word-component-names: off` | | ✓ | | |
+| React guardrails as errors: `exhaustive-deps`, `no-array-index-key`, `dangerouslySetInnerHTML`, effect-leak rules | | | ✓ | |
+| Accessibility (`vue-a11y/*` in /vue, `jsx-a11y/*` in /react, on by default) | | ✓ | ✓ | |
+| Component files: 100 lines/fn, 400 lines (`.vue` in /vue, `.jsx`/`.tsx` in /react) | | ✓ | ✓ | |
+| `max-lines-per-function: 50`                                     |      |      |        |    ✓    |
+| `max-lines: 250`, `max-statements: 20`                           |      |      |        |    ✓    |
+| `max-classes-per-file: 1`                                        |      |      |        |    ✓    |
 
 The style/guardrail layers apply to source files (`.js`/`.ts`/`.tsx`/`.vue` and friends) only — JSON, YAML, and Markdown files linted by Antfu's presets are not subject to them.
 
