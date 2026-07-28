@@ -19,6 +19,8 @@ jobs:
           node-version: 22
           cache: npm
           registry-url: https://registry.npmjs.org
+      # OIDC trusted publishing needs npm >=11.5.1; Node 22 bundles npm 10.
+      - run: npm install -g npm@^11.5.1
       - name: Check release tag matches package version
         run: '[ "v$(node -p "require(\"./package.json\").version")" = "$RELEASE_TAG" ]'
         env:
