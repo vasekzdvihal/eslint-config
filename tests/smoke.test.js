@@ -113,6 +113,16 @@ it('react: good.tsx passes clean', async () => {
   assertClean(await lintFile('react', 'good.tsx'));
 });
 
+it('react: bad.tsx triggers promoted React guardrails as errors', async () => {
+  const result = await lintFile('react', 'bad.tsx');
+  assertFires(result, {
+    'react/exhaustive-deps': ERROR,
+    'react/no-array-index-key': ERROR,
+    'react/web-api-no-leaked-timeout': ERROR,
+    'react/dom-no-dangerously-set-innerhtml': ERROR,
+  });
+});
+
 it('strict: good.ts passes clean', async () => {
   assertClean(await lintFile('strict', 'good.ts'));
 });

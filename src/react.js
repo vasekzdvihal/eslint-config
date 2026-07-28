@@ -1,8 +1,25 @@
 import vasek from './index.js';
 
+/** JSX/TSX files the React layers apply to. */
+const reactFiles = ['**/*.{jsx,tsx}'];
+
+/** Promotions from @eslint-react's recommended `warn` — AI ignores warnings. */
+const reactRules = {
+  'react/exhaustive-deps': 'error',
+  'react/no-array-index-key': 'error',
+  'react/dom-no-dangerously-set-innerhtml': 'error',
+  'react/web-api-no-leaked-timeout': 'error',
+  'react/web-api-no-leaked-interval': 'error',
+  'react/web-api-no-leaked-event-listener': 'error',
+  'react/web-api-no-leaked-fetch': 'error',
+  'react/web-api-no-leaked-intersection-observer': 'error',
+  'react/web-api-no-leaked-resize-observer': 'error',
+};
+
 /**
  * React variant: composes the base config with Antfu's `react: true`
- * (`@eslint-react/eslint-plugin` renamed to `react/*`, plus `eslint-plugin-react-refresh`).
+ * (`@eslint-react/eslint-plugin` renamed to `react/*`, plus `eslint-plugin-react-refresh`)
+ * and promotes the AI-critical recommended rules from warn to error.
  *
  * @param {import('@antfu/eslint-config').OptionsConfig & Omit<import('@antfu/eslint-config').TypedFlatConfigItem, 'files'>} [options]
  *   Antfu options, merged over the defaults.
@@ -13,6 +30,11 @@ import vasek from './index.js';
 export default function vasekReact(options = {}, ...userConfigs) {
   return vasek(
     { react: true, ...options },
+    {
+      name: 'vasek/react',
+      files: reactFiles,
+      rules: reactRules,
+    },
     ...userConfigs,
   );
 }
